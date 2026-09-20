@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="블록체인 중계 네트워크 상태를 시각화하는 실시간 대시보드" />
+  <title>RelayScan — Blockchain Relay Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="noise"></div>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">
+          <span></span><span></span><span></span>
+        </div>
+        <div>
+          <strong>RelayScan</strong>
+          <small>BLOCKCHAIN RELAY</small>
+        </div>
+      </div>
+
+      <nav class="nav">
+        <button class="nav-item active" data-section="overview">
+          <span class="nav-icon">⌁</span><span>Overview</span>
+        </button>
+        <button class="nav-item" data-section="network">
+          <span class="nav-icon">◎</span><span>Network</span>
+        </button>
+        <button class="nav-item" data-section="transactions">
+          <span class="nav-icon">↔</span><span>Transactions</span>
+        </button>
+        <button class="nav-item" data-section="blocks">
+          <span class="nav-icon">◇</span><span>Blocks</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <div class="mini-status">
+          <span class="pulse"></span>
+          <div>
+            <strong>Relay online</strong>
+            <small>All systems operational</small>
+          </div>
+        </div>
+        <div class="version">v1.0.0</div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <button class="menu-btn" id="menuBtn" aria-label="메뉴 열기">☰</button>
+        <div>
+          <p class="eyebrow">REAL-TIME NETWORK INTELLIGENCE</p>
+          <h1>Blockchain Relay Monitor</h1>
+        </div>
+        <div class="top-actions">
+          <label class="network-select-wrap">
+            <span class="status-dot"></span>
+            <select id="networkSelect" aria-label="네트워크 선택">
+              <option value="Ethereum">Ethereum Mainnet</option>
+              <option value="Polygon">Polygon PoS</option>
+              <option value="Arbitrum">Arbitrum One</option>
+              <option value="Base">Base</option>
+            </select>
+          </label>
+          <button class="icon-btn" id="pauseBtn" title="실시간 업데이트 일시정지">Ⅱ</button>
+        </div>
+      </header>
+
+      <section class="hero">
+        <div>
+          <span class="chip"><span class="pulse"></span> LIVE</span>
+          <h2>네트워크가 움직이는 순간을<br><em>밀리초 단위로 추적합니다.</em></h2>
+          <p>블록 전파, 트랜잭션 중계, 노드 상태와 처리량을 하나의 대시보드에서 확인하세요.</p>
+        </div>
+        <div class="hero-orbit" aria-hidden="true">
+          <div class="orbit orbit-1"></div>
+          <div class="orbit orbit-2"></div>
+          <div class="core">R</div>
+          <i class="sat s1"></i><i class="sat s2"></i><i class="sat s3"></i>
+        </div>
+      </section>
+
+      <section class="stats-grid" id="overview">
+        <article class="stat-card">
+          <div class="stat-top"><span>ACTIVE RELAYS</span><span class="up">+2.1%</span></div>
+          <div class="stat-value"><span id="activeRelays">128</span><small>nodes</small></div>
+          <div class="spark" data-spark="relays"></div>
+        </article>
+        <article class="stat-card">
+          <div class="stat-top"><span>RELAY THROUGHPUT</span><span class="up">+8.7%</span></div>
+          <div class="stat-value"><span id="throughput">14.8K</span><small>tx/s</small></div>
+          <div class="spark" data-spark="throughput"></div>
+        </article>
+        <article class="stat-card">
+          <div class="stat-top"><span>AVG. LATENCY</span><span class="down">-12.4%</span></div>
+          <div class="stat-value"><span id="latency">42</span><small>ms</small></div>
+          <div class="spark" data-spark="latency"></div>
+        </article>
+        <article class="stat-card">
+          <div class="stat-top"><span>BLOCK HEIGHT</span><span class="muted">LATEST</span></div>
+          <div class="stat-value"><span id="blockHeight">23,418,721</span></div>
+          <div class="spark" data-spark="blocks"></div>
+        </article>
+      </section>
+
+      <section class="grid-2">
+        <article class="panel network-panel" id="network">
+          <div class="panel-head">
+            <div>
+              <p class="eyebrow">GLOBAL RELAY MESH</p>
+              <h3>Network Topology</h3>
+            </div>
+            <div class="legend">
+              <span><i class="legend-dot healthy"></i>Healthy</span>
+              <span><i class="legend-dot syncing"></i>Syncing</span>
+            </div>
+          </div>
+          <div class="network-map" id="networkMap" aria-label="중계 노드 네트워크 그래프">
+            <svg id="networkSvg" viewBox="0 0 720 360" preserveAspectRatio="xMidYMid meet"></svg>
+            <div class="map-caption">
+              <span><strong id="meshNodes">128</strong> relay nodes</span>
+              <span><strong id="meshRegions">8</strong> regions</span>
+              <span><strong id="meshPeers">742</strong> peer links</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-head">
+            <div>
+              <p class="eyebrow">NETWORK LOAD</p>
+              <h3>Relay Throughput</h3>
+            </div>
+            <div class="range-tabs">
+              <button class="range-btn active" data-range="1h">1H</button>
+              <button class="range-btn" data-range="24h">24H</button>
+              <button class="range-btn" data-range="7d">7D</button>
+            </div>
+          </div>
+          <div class="chart-wrap">
+            <div class="chart-scale">
+              <span>20K</span><span>15K</span><span>10K</span><span>5K</span><span>0</span>
+            </div>
+            <svg class="line-chart" id="lineChart" viewBox="0 0 640 280" preserveAspectRatio="none"></svg>
+          </div>
+          <div class="chart-footer">
+            <div><span class="tiny-label">PEAK</span><strong id="peakValue">18.9K tx/s</strong></div>
+            <div><span class="tiny-label">AVERAGE</span><strong id="avgValue">13.7K tx/s</strong></div>
+            <div><span class="tiny-label">PACKET LOSS</span><strong>0.003%</strong></div>
+          </div>
+        </article>
+      </section>
+
+      <section class="grid-3">
+        <article class="panel tx-panel" id="transactions">
+          <div class="panel-head">
+            <div>
+              <p class="eyebrow">MEMPOOL → RELAY</p>
+              <h3>Live Transactions</h3>
+            </div>
+            <span class="live-label"><span class="pulse"></span> Streaming</span>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr><th>TX HASH</th><th>VALUE</th><th>FEE</th><th>LATENCY</th><th>STATUS</th></tr>
+              </thead>
+              <tbody id="txTable"></tbody>
+            </table>
+          </div>
+        </article>
+
+        <article class="panel side-panel">
+          <div class="panel-head">
+            <div>
+              <p class="eyebrow">QUEUE HEALTH</p>
+              <h3>Relay Queue</h3>
+            </div>
+          </div>
+          <div class="donut-wrap">
+            <div class="donut" id="queueDonut"><span id="queuePercent">84%</span></div>
+            <div>
+              <strong id="queueProcessed">2.41M</strong>
+              <small>processed today</small>
+            </div>
+          </div>
+          <div class="queue-list">
+            <div><span>Priority</span><strong>9,281</strong></div>
+            <div><span>Standard</span><strong>31,494</strong></div>
+            <div><span>Deferred</span><strong>1,032</strong></div>
+          </div>
+        </article>
+      </section>
+
+      <section class="panel blocks-panel" id="blocks">
+        <div class="panel-head">
+          <div>
+            <p class="eyebrow">PROPAGATION PERFORMANCE</p>
+            <h3>Latest Blocks</h3>
+          </div>
+          <button class="ghost-btn" id="refreshBlocks">Refresh</button>
+        </div>
+        <div class="blocks-grid" id="blocksGrid"></div>
+      </section>
+
+      <footer>
+        <span>RelayScan Dashboard</span>
+        <span>Demo data · Front-end simulation</span>
+      </footer>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
